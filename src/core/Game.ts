@@ -34,7 +34,20 @@ class Game {
 			render: this.render.bind(this),
 		});
 
+		this.resize = this.resize.bind(this);
+
+		this.init();
+	}
+
+	init() {
 		this.resize();
+
+		window.addEventListener('resize', this.resize);
+	}
+
+	dispose() {
+		window.removeEventListener('resize', this.resize);
+		this.renderer.dispose();
 	}
 
 	resize() {
