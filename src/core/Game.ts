@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { Entity } from './Entity';
+import { Group } from './Group';
 import { Loop } from './Loop';
 
 class Game {
@@ -8,8 +9,9 @@ class Game {
 	public readonly camera: THREE.PerspectiveCamera;
 	public readonly renderer: THREE.WebGLRenderer;
 
+	public readonly entities: Group;
+
 	private loop: Loop;
-	public entities: Entity[] = [];
 
 	constructor(domElement: HTMLElement) {
 		this.domElement = domElement;
@@ -18,9 +20,14 @@ class Game {
 		this.camera = new THREE.PerspectiveCamera(60);
 		this.renderer = new THREE.WebGLRenderer({ antialias: false });
 
+		this.entities = new Group();
+		this.scene.add(this.entities);
+
 		this.domElement.appendChild(this.renderer.domElement);
 		this.camera.position.set(4, 4, 4);
 		this.camera.lookAt(new THREE.Vector3());
+
+		this.scene.add(new THREE.AxesHelper());
 
 		this.loop = new Loop({
 			update: this.update.bind(this),
@@ -47,11 +54,11 @@ class Game {
 	}
 
 	update(step: number) {
-		this.entities.forEach((entity) => entity.update(step));
+		this.entities.update(step);
 	}
 
 	render() {
-		this.entities.forEach((entity) => entity.render());
+		this.entities.render();
 
 		this.renderer.render(this.scene, this.camera);
 	}

@@ -1,28 +1,22 @@
 import * as THREE from 'three';
 
-class Entity {
-	public mesh: THREE.Object3D;
+class Entity extends THREE.Object3D {
+	type: string;
+	readonly isEntity = true;
 
-	constructor() {
-		this.mesh = new THREE.Object3D();
+	static isEntity(entity: Entity): entity is Entity {
+		return entity.type === 'entity';
 	}
 
-	attach(parent: THREE.Object3D) {
-		parent.add(this.mesh);
+	constructor() {
+		super();
+
+		this.type = 'entity';
 	}
 
 	update(step: number) {}
 
 	render() {}
-}
-
-class MeshEntity {
-	public mesh: THREE.Object3D;
-	public parent: THREE.Object3D;
-
-	constructor(parent: THREE.Object3D) {
-		this.parent = parent;
-	}
 }
 
 export { Entity };
