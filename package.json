@@ -13,7 +13,8 @@
     "singleQuote": true
   },
   "dependencies": {
-    "three": "^0.120.1"
+    "three": "^0.120.1",
+    "tweakpane": "^1.5.4"
   },
   "devDependencies": {
     "@types/three": "^0.103.2",

@@ -1,13 +1,19 @@
 import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import Tweakpane from 'tweakpane';
 import { Group } from './Group';
 import { Loop } from './Loop';
+import { Pointer } from './Pointer';
 
-let domElement: HTMLElement;
 let camera: THREE.PerspectiveCamera;
-let scene: THREE.Scene;
-let renderer: THREE.WebGLRenderer;
+let domElement: HTMLElement;
 let entities: Group;
+let pointer: Pointer;
+let renderer: THREE.WebGLRenderer;
+let scene: THREE.Scene;
+let pane: Tweakpane;
 
+let controls: OrbitControls;
 let loop: Loop;
 
 class Game {
@@ -18,8 +24,13 @@ class Game {
 		camera = new THREE.PerspectiveCamera(60);
 		renderer = new THREE.WebGLRenderer({ antialias: false });
 
+		controls = new OrbitControls(camera, domElement);
+		pane = new Tweakpane();
+
 		entities = new Group();
 		scene.add(entities);
+
+		pointer = new Pointer();
 
 		domElement.appendChild(renderer.domElement);
 		camera.position.set(4, 4, 4);
@@ -31,8 +42,6 @@ class Game {
 			update: this.update.bind(this),
 			render: this.render.bind(this),
 		});
-
-		this.resize = this.resize.bind(this);
 
 		this.init();
 	}
@@ -48,13 +57,13 @@ class Game {
 		renderer.dispose();
 	}
 
-	resize() {
+	resize = () => {
 		const { width, height } = domElement.getBoundingClientRect();
 
 		renderer.setSize(width, height);
 		camera.aspect = width / height;
 		camera.updateProjectionMatrix();
-	}
+	};
 
 	start() {
 		loop.start();
@@ -65,6 +74,8 @@ class Game {
 	}
 
 	update(step: number) {
+		controls.update();
+		pointer.update();
 		entities.update(step);
 	}
 
@@ -75,4 +86,4 @@ class Game {
 	}
 }
 
-export { Game, camera, scene, entities };
+export { camera, domElement, entities, Game, pane, pointer, scene };
