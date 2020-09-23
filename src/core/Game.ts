@@ -1,35 +1,33 @@
 import * as THREE from 'three';
-import { Entity } from './Entity';
 import { Group } from './Group';
 import { Loop } from './Loop';
 
+let domElement: HTMLElement;
+let camera: THREE.PerspectiveCamera;
+let scene: THREE.Scene;
+let renderer: THREE.WebGLRenderer;
+let entities: Group;
+
+let loop: Loop;
+
 class Game {
-	public readonly domElement: HTMLElement;
-	public readonly scene: THREE.Scene;
-	public readonly camera: THREE.PerspectiveCamera;
-	public readonly renderer: THREE.WebGLRenderer;
+	constructor(container: HTMLElement) {
+		domElement = container;
 
-	public readonly entities: Group;
+		scene = new THREE.Scene();
+		camera = new THREE.PerspectiveCamera(60);
+		renderer = new THREE.WebGLRenderer({ antialias: false });
 
-	private loop: Loop;
+		entities = new Group();
+		scene.add(entities);
 
-	constructor(domElement: HTMLElement) {
-		this.domElement = domElement;
+		domElement.appendChild(renderer.domElement);
+		camera.position.set(4, 4, 4);
+		camera.lookAt(new THREE.Vector3());
 
-		this.scene = new THREE.Scene();
-		this.camera = new THREE.PerspectiveCamera(60);
-		this.renderer = new THREE.WebGLRenderer({ antialias: false });
+		scene.add(new THREE.AxesHelper());
 
-		this.entities = new Group();
-		this.scene.add(this.entities);
-
-		this.domElement.appendChild(this.renderer.domElement);
-		this.camera.position.set(4, 4, 4);
-		this.camera.lookAt(new THREE.Vector3());
-
-		this.scene.add(new THREE.AxesHelper());
-
-		this.loop = new Loop({
+		loop = new Loop({
 			update: this.update.bind(this),
 			render: this.render.bind(this),
 		});
@@ -47,34 +45,34 @@ class Game {
 
 	dispose() {
 		window.removeEventListener('resize', this.resize);
-		this.renderer.dispose();
+		renderer.dispose();
 	}
 
 	resize() {
-		const { width, height } = this.domElement.getBoundingClientRect();
+		const { width, height } = domElement.getBoundingClientRect();
 
-		this.renderer.setSize(width, height);
-		this.camera.aspect = width / height;
-		this.camera.updateProjectionMatrix();
+		renderer.setSize(width, height);
+		camera.aspect = width / height;
+		camera.updateProjectionMatrix();
 	}
 
 	start() {
-		this.loop.start();
+		loop.start();
 	}
 
 	stop() {
-		this.loop.stop();
+		loop.stop();
 	}
 
 	update(step: number) {
-		this.entities.update(step);
+		entities.update(step);
 	}
 
 	render() {
-		this.entities.render();
+		entities.render();
 
-		this.renderer.render(this.scene, this.camera);
+		renderer.render(scene, camera);
 	}
 }
 
-export { Game };
+export { Game, camera, scene, entities };

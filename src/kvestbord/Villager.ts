@@ -1,9 +1,10 @@
 import * as THREE from 'three';
+import { BillboardEntity } from '../core/entities/Billboard';
 import { Entity } from '../core/Entity';
 
 let i = 0;
 
-class Villager extends Entity {
+class Villager extends BillboardEntity {
 	constructor() {
 		super();
 
@@ -17,8 +18,8 @@ class Villager extends Entity {
 
 	update(step: number) {
 		i += step;
-		this.position.x = Math.sin(i / 5);
-		this.position.z = Math.sin(i / 15);
+		this.position.x = Math.sin(i / 15);
+		this.position.z = Math.sin(i / 50);
 	}
 }
 

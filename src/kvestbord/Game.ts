@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Game, Group } from '../';
+import { Game, entities } from '../';
 import { Villager } from './Villager';
 
 class Kvestbord extends Game {
@@ -9,7 +9,7 @@ class Kvestbord extends Game {
 		this.start();
 
 		const villager = new Villager();
-		this.entities.add(villager);
+		entities.add(villager);
 	}
 }
 
